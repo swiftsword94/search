@@ -1,10 +1,11 @@
 package search;
 /**
  * @author  Alex Smirnov
+ * 
  * State class - For use with GeneticAlgo.java
  * Defines a state of the genetic algorithm
  * State can be crossed over with another state to make a child state
- * State string can be mutated
+ * State string can be mutated 
  */
 
 // TODO: Generate random states
