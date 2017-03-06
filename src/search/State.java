@@ -8,7 +8,7 @@ package search;
  * State string can be mutated 
  */
 
-// TODO: Generate random states
+// TODO:
 public class State {
 	public int[] chromosome; // holds the bits of the assignment
 	public boolean elite; // determines if state is one of the best two in the population
