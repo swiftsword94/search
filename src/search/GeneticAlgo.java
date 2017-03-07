@@ -10,13 +10,14 @@ import java.util.Scanner;
  * SATISFIABILITY PROBLEM - Genetic Algorithm
  */
 
-// TODO: Complete setFitness, findElite, findParents, crossover, mutation, and flipHeuristic. Complete main.
+// TODO: Complete findElite, findParents, crossover, mutation, and flipHeuristic. Complete main.
 public class GeneticAlgo {
 	public int variables; // n
 	public int clauses; // m
 	public int clauseLength = 3;
 	public int[][] clauseArr; // holds m clauses 
 	public State[] chromosomes; // test states
+	public int numOfStates = 10; // number of test states
 	public boolean problemSolved = false;
 	public boolean noSolution = false;
 	
@@ -45,7 +46,9 @@ public class GeneticAlgo {
 	 */
 	public void run(){
 		while(problemSolved == false || noSolution == false){
-		    setFitness(chromosomes, clauseArr);
+			for(int i = 0; i < numOfStates; i++){
+				setFitness(chromosomes[i], clauseArr);
+			}	    
 		    findElite(chromosomes);
 		    findParents(chromosomes);
 		    crossover(chromosomes);
@@ -99,18 +102,33 @@ public class GeneticAlgo {
 	 * @return
 	 */
 	public void genStates(){
-		chromosomes = new State[10];
-		for(int i = 0; i < 10; i++){
+		chromosomes = new State[numOfStates];
+		for(int i = 0; i < numOfStates; i++){
 			chromosomes[i].randomizeBits(variables);
 		}
 	}
 	
 	/**
-	 * setFitness - traverses clauses and sets fitness of current states
+	 * setFitness - traverses clauses and sets fitness of current state
 	 * @param curr
 	 */
-	public void setFitness(State[] chromosomes, int[][] clauseArr){
-		// TODO: FINISH THIS METHOD
+	public void setFitness(State chromosome, int[][] clauseArr){
+		boolean satisfyClause = true;
+		int curr;
+		for(int i = 0; i < clauses; i++){
+			for(int j = 0; j < clauseLength; j++){
+				curr = clauseArr[i][j];
+				if(curr > 0 && chromosome.bitstring[curr] != 1){
+					satisfyClause = false;
+				} else if(curr < 0 && chromosome.bitstring[curr] != 0){
+					satisfyClause = false;
+				}
+			}
+			if(satisfyClause == true){
+				chromosome.fitness++;
+			}
+			satisfyClause = true;
+		}
 	}
 	
 	/**
