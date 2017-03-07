@@ -8,11 +8,11 @@ package search;
  * State string can be mutated 
  */
 
-// TODO:
 public class State {
 	public int[] chromosome; // holds the bits of the assignment
 	public boolean elite; // determines if state is one of the best two in the population
 	public int fitness; // fitness of the state for solving the SAT problem
+	public boolean willReproduce; // determines if state will reproduce through crossover
 	
 	/**
 	 * State - generate default blank state
@@ -20,6 +20,7 @@ public class State {
 	public State(){
 		chromosome = new int[100];
 		elite = false;
+		willReproduce = false;
 		fitness = 0;
 	}
 	

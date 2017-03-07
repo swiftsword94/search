@@ -9,30 +9,55 @@ import java.util.Scanner;
  * SATISFIABILITY PROBLEM - Genetic Algorithm
  */
 
-// TODO: Create 10 randomized States, Parse through lines of cnf files, Implement genetic algorithm
+// TODO: Complete setFitness, findElite, findParents, crossover, mutation, and flipHeuristic. Complete main.
 public class GeneticAlgo {
-	public int variables;
-	public int clauses; // n
+	public int variables; // n
+	public int clauses; // m
 	public int clauseLength = 3;
-	public int[][] clauseArr; // holds n clauses 
+	public int[][] clauseArr; // holds m clauses 
 	public State[] chromosomes; // test states
-	public static void main(String[] args) {
-		
+	public boolean problemSolved = false;
+	public boolean noSolution = false;
+	
+	public static void main(String[] args) throws FileNotFoundException {
+		GeneticAlgo algorithm = new GeneticAlgo();
+		algorithm.run();
+		/**
+		 * Plot the success rate of algorithm as a function of n variables.
+		 * Success rate is percentage of benchmark problems for which solutions are found by solver
+		 * Report running time and average number of flips in finding a solution.
+		 * Plot median running time and average bit flips as a function of n variables. 
+		 */
 	}
 	/**
-	 * Instantiates the Genetic Algorithm
+	 * GeneticAlgo - instantiates the Genetic Algorithm
 	 * @throws FileNotFoundException 
 	 */
-	public GeneticAlgo() throws FileNotFoundException{
-		// File input for testing - FOR DEMO	
+	public GeneticAlgo() throws FileNotFoundException{	
         fileParse(); 
-        genStates();
+        genStates();  
+	}
+	
+	/**
+	 * run - runs the Genetic Algorithm until either the problem is solved, or no solution is detected
+	 * noSolution is true when the best possible fitness is found and cannot be increased any more
+	 */
+	public void run(){
+		while(problemSolved == false || noSolution == false){
+		    setFitness(chromosomes, clauseArr);
+		    findElite(chromosomes);
+		    findParents(chromosomes);
+		    crossover(chromosomes);
+		    mutation(chromosomes);
+		    flipHeuristic(chromosomes);
+        }
 	}
 	
 	/**
 	 * fileParse - parses through input file, reads in variables, clauses, then parses through the clauses
+	 * @throws FileNotFoundException 
 	 */
-	public void fileParse(){
+	public void fileParse() throws FileNotFoundException{
 		Scanner sc = new Scanner(System.in);
         System.out.println("Enter file name: ");   
         String fileName = sc.next();
@@ -79,19 +104,58 @@ public class GeneticAlgo {
 		}
 	}
 	
-	 /**Test each chromosome to see how good it is at solving the problem at hand and assign a fitness score accordingly. 
-	 * The fitness score is a measure of how good that chromosome is at solving the problem to hand.
-	 * Select two members from the current population. The chance of being selected is proportional to the chromosomes fitness. 
-	 * Roulette wheel selection is a commonly used method.
-	 * Dependent on the crossover rate crossover the bits from each chosen chromosome at a randomly chosen point.
-	 * Step through the chosen chromosomes bits and flip dependent on the mutation rate.
-	 * Repeat step 2, 3, 4 until a new population of N members has been created.*/
-	
 	/**
-	 * setFitness - traverses clauses and sets fitness of current state
+	 * setFitness - traverses clauses and sets fitness of current states
 	 * @param curr
 	 */
 	public void setFitness(State[] chromosomes, int[][] clauseArr){
-		
+		// TODO: FINISH THIS METHOD
+	}
+	
+	/**
+	 * findElite - finds the best two individuals in the population according to fitness
+	 * @param chromosomes
+	 */
+	public void findElite(State[] chromosomes){
+		// TODO: FINISH THIS METHOD
+	}
+	
+	/**
+	 * findParents - finds which members of the population will reproduce
+	 * @param chromosomes
+	 */
+	public void findParents(State[] chromosomes){
+		// TODO: FINISH THIS METHOD
+	}
+	
+	/**
+	 * crossover - given parents x and y, the i-th bit of the offspring is from x with 0.5 probability
+	 * and from y with 0.5 probability. Only apply crossover to 8 states from probabilistic selection,
+	 * and propagate the elite states forward intact.
+	 * @param x
+	 * @param y
+	 */
+	public void crossover(State[] chromosomes){
+		// TODO: FINISH THIS METHOD
+	}
+	
+	/**
+	 * mutation - mutates chromosome with probability 0.9. If a chromosome is to be mutated, then the mutation
+	 * flips each bit with probability 0.5. Apply mutation only to 8 states that are result of crossover.
+	 * @param curr
+	 */
+	public void mutation(State[] chromosomes){
+		// TODO: FINISH THIS METHOD
+	}
+	
+	/**
+	 * flipHeuristic - after crossover and mutation, the algorithm scans the bits of the assignment in random order.
+	 * Each bit is flipped, and the flip is accepted if the gain is >= 0. When all the bits have been considered, 
+	 * if the process improves the assignment's fitness, the flipping process is repeated until no additional improvement
+	 * can be achieved. Do not apply flip on the elite states.
+	 * @param curr
+	 */
+	public void flipHeuristic(State[] chromosomes){
+		// TODO: FINISH THIS METHOD
 	}
 }
