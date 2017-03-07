@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 /**
  * @author Alex Smirnov
+ * 
  * SATISFIABILITY PROBLEM - Genetic Algorithm
  */
 
