@@ -10,7 +10,7 @@ import java.util.Scanner;
  * SATISFIABILITY PROBLEM - Genetic Algorithm
  */
 
-// TODO: Complete findElite, findParents, crossover, mutation, and flipHeuristic. Complete main.
+// TODO: Complete findParents, crossover, mutation, and flipHeuristic. Complete main.
 public class GeneticAlgo {
 	public int variables; // n
 	public int clauses; // m
@@ -136,7 +136,26 @@ public class GeneticAlgo {
 	 * @param chromosomes
 	 */
 	public void findElite(State[] chromosomes){
-		// TODO: FINISH THIS METHOD
+		State elite1 = new State();
+		State elite2 = new State();
+		int eliteCount = 0;
+		for(int i = 0; i < numOfStates; i++){
+			if(chromosomes[i].fitness > elite1.fitness){
+				elite2 = elite1;
+				elite1 = chromosomes[i];
+			} else if(chromosomes[i].fitness > elite2.fitness){
+				elite2 = chromosomes[i];
+			}
+		}
+		for(int j = 0; j < numOfStates; j++){
+			if(chromosomes[j].fitness == elite1.fitness || chromosomes[j].fitness == elite2.fitness){
+				chromosomes[j].elite = true;
+				eliteCount++;
+				if(eliteCount >= 2){
+					break;
+				}
+			}
+		}
 	}
 	
 	/**
