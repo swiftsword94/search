@@ -10,7 +10,7 @@ import java.util.Scanner;
  * SATISFIABILITY PROBLEM - Genetic Algorithm
  */
 
-// TODO: Complete findParents, crossover, mutation, and flipHeuristic. Complete main.
+// TODO: Complete crossover, mutation, and flipHeuristic. Complete main.
 public class GeneticAlgo {
 	public int variables; // n
 	public int clauses; // m
@@ -136,19 +136,19 @@ public class GeneticAlgo {
 	 * @param chromosomes
 	 */
 	public void findElite(State[] chromosomes){
-		State elite1 = new State();
-		State elite2 = new State();
+		int elite1 = 0;
+		int elite2 = 0;
 		int eliteCount = 0;
 		for(int i = 0; i < numOfStates; i++){
-			if(chromosomes[i].fitness > elite1.fitness){
+			if(chromosomes[i].fitness > elite1){
 				elite2 = elite1;
-				elite1 = chromosomes[i];
-			} else if(chromosomes[i].fitness > elite2.fitness){
-				elite2 = chromosomes[i];
+				elite1 = chromosomes[i].fitness;
+			} else if(chromosomes[i].fitness > elite2){
+				elite2 = chromosomes[i].fitness;
 			}
 		}
 		for(int j = 0; j < numOfStates; j++){
-			if(chromosomes[j].fitness == elite1.fitness || chromosomes[j].fitness == elite2.fitness){
+			if(chromosomes[j].fitness == elite1 || chromosomes[j].fitness == elite2){
 				chromosomes[j].elite = true;
 				eliteCount++;
 				if(eliteCount >= 2){
@@ -163,7 +163,28 @@ public class GeneticAlgo {
 	 * @param chromosomes
 	 */
 	public void findParents(State[] chromosomes){
-		// TODO: FINISH THIS METHOD
+		int notParent1 = 999;
+		int notParent2 = 999;
+		int notParentCount = 0;
+		for(int i = 0; i < numOfStates; i++){
+			if(chromosomes[i].fitness < notParent1){
+				notParent2 = notParent1;
+				notParent1 = chromosomes[i].fitness;
+			} else if(chromosomes[i].fitness < notParent2){
+				notParent2 = chromosomes[i].fitness;
+			}
+		}
+		for(int j = 0; j < numOfStates; j++){
+			if(chromosomes[j].fitness != notParent1 && chromosomes[j].fitness != notParent2){
+				chromosomes[j].willReproduce = true;
+			} else {
+				chromosomes[j].willReproduce = false;
+				notParentCount++;
+				if(notParentCount >= 2){
+					break;
+				}
+			}
+		}
 	}
 	
 	/**
