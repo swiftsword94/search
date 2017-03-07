@@ -20,7 +20,7 @@ public class State {
 	public State(){
 		bitstring = new int[100];
 		elite = false;
-		willReproduce = false;
+		willReproduce = true;
 		fitness = 0;
 	}
 	
