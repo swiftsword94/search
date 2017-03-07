@@ -9,7 +9,7 @@ package search;
  */
 
 public class State {
-	public int[] chromosome; // holds the bits of the assignment
+	public int[] bitstring; // holds the bits of the assignment
 	public boolean elite; // determines if state is one of the best two in the population
 	public int fitness; // fitness of the state for solving the SAT problem
 	public boolean willReproduce; // determines if state will reproduce through crossover
@@ -18,7 +18,7 @@ public class State {
 	 * State - generate default blank state
 	 */
 	public State(){
-		chromosome = new int[100];
+		bitstring = new int[100];
 		elite = false;
 		willReproduce = false;
 		fitness = 0;
@@ -29,9 +29,9 @@ public class State {
 	 * @param variables
 	 */
 	public void randomizeBits(int variables){
-		chromosome = new int[variables];
+		bitstring = new int[variables];
 		for(int i = 0; i < variables; i++){
-			chromosome[i] = random(0, 1);
+			bitstring[i] = random(0, 1);
 		}
 	}
 	
