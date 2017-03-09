@@ -8,7 +8,7 @@ import search.Search.DeepCopy;
 public class Node<ID extends DeepCopy<ID>, Data extends DeepCopy<Data>> implements Comparable<Node<ID, Data>>
 {
 	private ArrayList<Node<ID, Data>> neighbors = null;
-	private ID id = null;
+	private ID identifier = null;
 	private Data data = null; 
 	private Node<ID, Data> parent = null;
 	private double distance = 0, eCost = 0;
@@ -18,13 +18,13 @@ public class Node<ID extends DeepCopy<ID>, Data extends DeepCopy<Data>> implemen
 	}
 	public Node(ID id, Data data)
 	{
-		this.id.copy(id);
+		this.identifier.copy(id);
 		this.data = data;
 		this.neighbors = new ArrayList<Node<ID, Data>>();
 	}
 	public Node(ID id, Data data, double distance, double eCost, Node<ID, Data> parent)
 	{
-		this.id.copy(id);
+		this.identifier.copy(id);
 		this.data = data;
 		this.distance = distance;
 		this.eCost = eCost;
@@ -36,7 +36,7 @@ public class Node<ID extends DeepCopy<ID>, Data extends DeepCopy<Data>> implemen
 	 */
 	public Node(Node<ID, Data> node)
 	{
-		this.id.copy(node.id);
+		this.identifier.copy(node.identifier);
 		this.data = node.data;
 		this.parent = node.parent;
 		this.neighbors = new ArrayList<Node<ID, Data>>(node.neighbors);
@@ -63,13 +63,13 @@ public class Node<ID extends DeepCopy<ID>, Data extends DeepCopy<Data>> implemen
 	{
 		this.neighbors = neighbors;
 	}
-	public ID getId()
+	public ID getIdentifier()
 	{
-		return id;
+		return identifier;
 	}
 	public void setId(ID id)
 	{
-		this.id = id;
+		this.identifier = id;
 	}
 	public Data getData()
 	{
