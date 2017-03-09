@@ -1,5 +1,7 @@
 package search;
 
+
+
 import java.util.Collection;
 /**
  * An interface for objects used to path through a graph of <A>. It is expected to be used with Objects that use the Java Collection interface.
@@ -15,7 +17,7 @@ public interface Search <A>
 	 *
 	 * @param <T>
 	 */
-	public interface DeepCopy<T>
+	public interface DeepCopy<T> 
 	{
 		/**
 		 * Performs a deep copy of the contents from other to the current object 

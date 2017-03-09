@@ -1,8 +1,9 @@
 package search;
-
 import java.util.ArrayList;
 
 import search.Search.DeepCopy;
+
+
 
 public class Node<ID extends DeepCopy<ID>, Data extends DeepCopy<Data>> implements Comparable<Node<ID, Data>>
 {
@@ -54,5 +55,52 @@ public class Node<ID extends DeepCopy<ID>, Data extends DeepCopy<Data>> implemen
 		{
 			return 1;
 		}
+	}
+	public ArrayList<Node<ID, Data>> getNeighbors() {
+		return neighbors;
+	}
+	public void setNeighbors(ArrayList<Node<ID, Data>> neighbors)
+	{
+		this.neighbors = neighbors;
+	}
+	public ID getId()
+	{
+		return id;
+	}
+	public void setId(ID id)
+	{
+		this.id = id;
+	}
+	public Data getData()
+	{
+		return data;
+	}
+	public void setData(Data data)
+	{
+		this.data = data;
+	}
+	public Node<ID, Data> getParent()
+	{
+		return parent;
+	}
+	public void setParent(Node<ID, Data> parent)
+	{
+		this.parent = parent;
+	}
+	public double getDistance()
+	{
+		return distance;
+	}
+	public void setDistance(double distance)
+	{
+		this.distance = distance;
+	}
+	public double geteCost()
+	{
+		return eCost;
+	}
+	public void seteCost(double eCost)
+	{
+		this.eCost = eCost;
 	}
 }
