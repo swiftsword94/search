@@ -44,6 +44,7 @@ public class GeneticAlgo {
 	 * noSolution is true when the best possible fitness is found and cannot be increased any more
 	 */
 	public void run(){
+		int failCount = 0;
 		while(problemSolved == false || noSolution == false){
 			for(int i = 0; i < numOfStates; i++){
 				setFitness(chromosomes[i], clauseArr);
@@ -53,7 +54,26 @@ public class GeneticAlgo {
 		    crossover(chromosomes);
 		    mutation(chromosomes);
 		    flipHeuristic(chromosomes);
-        }
+		    for(int i = 0; i < numOfStates; i++){
+				if(chromosomes[i].elite){
+					if(chromosomes[i].fitness == clauses){
+						problemSolved = true;
+						break;
+					}else{
+						failCount++;
+						if(failCount == 1000){
+							noSolution = true;
+							break;	
+						}
+					}
+				}
+			}
+		    if(problemSolved){
+		    	System.out.println("Solved problem");
+		    }else if(noSolution){
+		    	System.out.println("No solution");
+		    }
+		}
 	}
 	
 	/**
