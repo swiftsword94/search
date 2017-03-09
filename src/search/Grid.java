@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class Grid
@@ -58,7 +60,14 @@ public class Grid
 	{
 		Scanner scan = new Scanner(file);
 		int cityID = -1, x = -1, y = -1;
-		
+		 if(scan.hasNext())
+		 {
+			 int size = Integer.parseInt(scan.nextLine());
+			 if(graph == null)
+			 {
+				 graph = (size>0)?new HashMap<Integer, Node<intIdentifier, Coord>>(size):new HashMap<Integer, Node<intIdentifier, Coord>>(0);
+			 }
+		 }
 		for(String str = null ;scan.hasNext();)
 		{
 			//get city data
@@ -73,6 +82,32 @@ public class Grid
 	}
 	public void exportGrid(File file) throws FileNotFoundException
 	{
+		//Todo
+	}
+	public void updateFringe()
+	{
 		
+	}
+	public void nearestInsertion(ArrayList<Node<intIdentifier, Coord>> current)
+	{
+		/*1. Select the shortest edge, and make a subtour of it.
+2. Select a city not in the subtour, having the shortest distance to any one of the cities in the subtour.
+3. Find an edge in the subtour such that the cost of inserting the selected city between the edge’s cities will be minimal.*/
+		
+	}
+	public ArrayList<Node<intIdentifier, Coord>> shortestHamiltonianCycle() throws Exception
+	{
+		if(graph == null)
+		{
+			throw new Exception("Graph uninitialized");
+		}
+		PriorityQueue<ArrayList<Node<intIdentifier, Coord>>> fringe = new PriorityQueue<>();//how do i want to compare the outcomes
+		HashSet<Node<intIdentifier, Coord>> closed = new HashSet<Node<intIdentifier, Coord>>();
+		
+		while(!fringe.isEmpty())
+		{
+			
+		}
+		return null;
 	}
 }
