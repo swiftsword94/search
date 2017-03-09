@@ -6,7 +6,6 @@ import java.util.Scanner;
 
 /**
  * @author Alex Smirnov
- * 
  * SATISFIABILITY PROBLEM - Genetic Algorithm
  */
 
@@ -195,7 +194,47 @@ public class GeneticAlgo {
 	 * @param y
 	 */
 	public void crossover(State[] chromosomes){
-		// TODO: FINISH THIS METHOD
+		State[] nextGeneration = new State[numOfStates];
+		int j = 0;
+		for(int i = 0; i < numOfStates; i++){ // propagate elite states
+			if(chromosomes[i].elite == true){
+				nextGeneration[j] = chromosomes[i];
+				j++;
+			} 	
+		}
+		State parent1;
+		State parent2;
+		int index1 = 0;
+		int index2 = 1;
+		for(int k = 0; k < (numOfStates - 2); k++){
+			while(!chromosomes[index1].willReproduce){
+				if(index1 == 9){
+					index1 = 0;
+				} else{
+					index1++;
+				}	
+			}
+			parent1 = chromosomes[index1];
+			while(!chromosomes[index2].willReproduce){
+				if(index2 == 9){
+					index2 = 0;
+				} else{
+					index2++;
+				}
+			}
+			parent2 = chromosomes[index2];
+			// Crossover
+			for(int i = 0; i < variables; i++){
+				if(random(1, 10) > 5){
+					nextGeneration[k].bitstring[i] = parent1.bitstring[i];
+				}else{
+					nextGeneration[k].bitstring[i] = parent2.bitstring[i];
+				}
+			}	
+		}
+		for(int i = 0; i < numOfStates; i++){
+			chromosomes[i] = nextGeneration[i];
+		}	
 	}
 	
 	/**
@@ -217,4 +256,16 @@ public class GeneticAlgo {
 	public void flipHeuristic(State[] chromosomes){
 		// TODO: FINISH THIS METHOD
 	}
+	
+	/**
+	 * random - generates random number between min and max, inclusive
+	 * @param min
+	 * @param max
+	 * @return
+	 */
+	public int random(int min, int max)
+    {
+       int range = (max - min) + 1;    
+       return (int)(Math.random() * range) + min;
+    }
 }
