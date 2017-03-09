@@ -243,7 +243,21 @@ public class GeneticAlgo {
 	 * @param curr
 	 */
 	public void mutation(State[] chromosomes){
-		// TODO: FINISH THIS METHOD
+		for(int i = 0; i < numOfStates; i++){
+			if(!chromosomes[i].elite){
+				if(random(1, 10) < 10){
+					for(int j = 0; j < variables; j++){
+						if(random(1, 10) > 5){
+							if(chromosomes[i].bitstring[j] == 0){
+								chromosomes[i].bitstring[j] = 1;
+							}else if(chromosomes[i].bitstring[j] == 1){
+								chromosomes[i].bitstring[j] = 0;
+							}		
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	/**
