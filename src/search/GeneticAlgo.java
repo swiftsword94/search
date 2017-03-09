@@ -45,9 +45,10 @@ public class GeneticAlgo {
 	 */
 	public void run(){
 		int failCount = 0;
-		while(problemSolved == false || noSolution == false){
+		int topFitness = 0;
+		while(problemSolved == false && noSolution == false){
 			for(int i = 0; i < numOfStates; i++){
-				setFitness(chromosomes[i], clauseArr);
+				setFitness(chromosomes[i], i, clauseArr);
 			}	    
 		    findElite(chromosomes);
 		    findParents(chromosomes);
@@ -56,24 +57,26 @@ public class GeneticAlgo {
 		    flipHeuristic(chromosomes);
 		    for(int i = 0; i < numOfStates; i++){
 				if(chromosomes[i].elite){
-					if(chromosomes[i].fitness == clauses){
+					topFitness = chromosomes[i].fitness;
+					if(chromosomes[i].fitness > clauses){	
 						problemSolved = true;
 						break;
-					}else{
+					}else if(chromosomes[i].fitness < clauses){
 						failCount++;
-						if(failCount == 1000){
+						if(failCount >= 1000){
 							noSolution = true;
 							break;	
 						}
 					}
 				}
 			}
-		    if(problemSolved){
-		    	System.out.println("Solved problem");
-		    }else if(noSolution){
-		    	System.out.println("No solution");
-		    }
+		    System.out.println(failCount + "Current fitness: " + topFitness);
 		}
+		if(problemSolved){
+	    	System.out.println("Solved problem, Best Fitness = " + topFitness);
+	    }else if(noSolution){
+	    	System.out.println("No solution, Best fitness = " + topFitness);
+	    }
 	}
 	
 	/**
@@ -87,20 +90,21 @@ public class GeneticAlgo {
         sc.close();
         Scanner fileScan = new Scanner(new File(fileName));
 		while(fileScan.hasNext()){
-        	if(fileScan.next().charAt(0) == 'c'){ // comment line
+			char curr = fileScan.next().charAt(0);
+        	if(curr == 'c'){ // comment line
         		fileScan.nextLine();
-        	} else if(fileScan.next().charAt(0) == 'p'){ // problem line
-        		if(fileScan.next() == "cnf"){
+        	} else if(curr == 'p'){ // problem line
+        		String currS = fileScan.next();
+        		if(currS.equals("cnf")){
         			variables = fileScan.nextInt();
         			clauses = fileScan.nextInt();
-        			clauses--; // for some reason there's always 1 less clause than it says
         			clauseArr = new int[clauses][clauseLength];
         			fileScan.nextLine();
         		} else{
         			System.out.println("Wrong format, not cnf");
         			break;	
         		}
-        	} else if(fileScan.next().charAt(0) == '%'){ // end of file
+        	} else if(curr == '%'){ // end of file
         		break;
         	} else { // fill clauses into string array
         		int number;
@@ -123,6 +127,9 @@ public class GeneticAlgo {
 	public void genStates(){
 		chromosomes = new State[numOfStates];
 		for(int i = 0; i < numOfStates; i++){
+			chromosomes[i] = new State();
+		}
+		for(int i = 0; i < numOfStates; i++){
 			chromosomes[i].randomizeBits(variables);
 		}
 	}
@@ -131,15 +138,16 @@ public class GeneticAlgo {
 	 * setFitness - traverses clauses and sets fitness of current state
 	 * @param curr
 	 */
-	public void setFitness(State chromosome, int[][] clauseArr){
+	public void setFitness(State chromosome, int index, int[][] clauseArr){
 		boolean satisfyClause = true;
 		int curr;
+		chromosome.fitness = 0;
 		for(int i = 0; i < clauses; i++){
 			for(int j = 0; j < clauseLength; j++){
 				curr = clauseArr[i][j];
-				if(curr > 0 && chromosome.bitstring[curr] != 1){
+				if(curr > 0 && chromosome.bitstring[curr-1] != 1){
 					satisfyClause = false;
-				} else if(curr < 0 && chromosome.bitstring[curr] != 0){
+				} else if(curr < 0 && chromosome.bitstring[-curr-1] != 0){
 					satisfyClause = false;
 				}
 			}
@@ -148,6 +156,7 @@ public class GeneticAlgo {
 			}
 			satisfyClause = true;
 		}
+		chromosomes[index].fitness = chromosome.fitness;
 	}
 	
 	/**
@@ -222,11 +231,14 @@ public class GeneticAlgo {
 				j++;
 			} 	
 		}
+		for(int i = 2; i < numOfStates; i++){
+			nextGeneration[i] = new State();
+		}
 		State parent1;
 		State parent2;
 		int index1 = 0;
 		int index2 = 1;
-		for(int k = 0; k < (numOfStates - 2); k++){
+		for(int k = 2; k < numOfStates; k++){
 			while(!chromosomes[index1].willReproduce){
 				if(index1 == 9){
 					index1 = 0;
@@ -315,7 +327,7 @@ public class GeneticAlgo {
 					test.bitstring[randomBit] = 0;
 				}
 				int testFitness = test.fitness;
-				setFitness(test, clauseArr);
+				setFitness(test, i, clauseArr);
 				if(test.fitness < testFitness){
 					if(test.bitstring[randomBit] == 0){
 						test.bitstring[randomBit] = 1;
