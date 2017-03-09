@@ -268,7 +268,43 @@ public class GeneticAlgo {
 	 * @param curr
 	 */
 	public void flipHeuristic(State[] chromosomes){
-		// TODO: FINISH THIS METHOD
+		State test;
+		for(int i = 0; i < numOfStates; i++){
+			if(chromosomes[i].elite){
+				continue;
+			}
+			test = chromosomes[i];
+			int[] consideredBits = new int[variables];
+			boolean considered = true;
+			int randomBit = 0;
+			for(int j = 0; j < variables; j++){
+				while(considered){
+					considered = false;
+					randomBit = random(0, (variables - 1));
+					for(int k = 0; k < variables; k++){
+						if(consideredBits[k] == randomBit){
+							considered = true;
+							break;
+						}
+					}
+				}
+				// found the random bit to flip
+				if(test.bitstring[randomBit] == 0){
+					test.bitstring[randomBit] = 1;
+				} else if(test.bitstring[randomBit] == 1){
+					test.bitstring[randomBit] = 0;
+				}
+				int testFitness = test.fitness;
+				setFitness(test, clauseArr);
+				if(test.fitness < testFitness){
+					if(test.bitstring[randomBit] == 0){
+						test.bitstring[randomBit] = 1;
+					} else if(test.bitstring[randomBit] == 1){
+						test.bitstring[randomBit] = 0;
+					}
+				}
+			}	
+		}
 	}
 	
 	/**
