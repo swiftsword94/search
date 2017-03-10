@@ -63,14 +63,14 @@ public class GeneticAlgo {
 						break;
 					}else if(chromosomes[i].fitness < clauses){
 						failCount++;
-						if(failCount >= 1000){
+						if(failCount >= 30000){
 							noSolution = true;
 							break;	
 						}
 					}
 				}
 			}
-		    System.out.println(failCount + "Current fitness: " + topFitness);
+		    System.out.println(failCount + " Current fitness: " + topFitness);
 		}
 		if(problemSolved){
 	    	System.out.println("Solved problem, Best Fitness = " + topFitness);
@@ -139,22 +139,24 @@ public class GeneticAlgo {
 	 * @param curr
 	 */
 	public void setFitness(State chromosome, int index, int[][] clauseArr){
-		boolean satisfyClause = true;
+		boolean satisfyClause = false;
 		int curr;
 		chromosome.fitness = 0;
 		for(int i = 0; i < clauses; i++){
 			for(int j = 0; j < clauseLength; j++){
 				curr = clauseArr[i][j];
-				if(curr > 0 && chromosome.bitstring[curr-1] != 1){
-					satisfyClause = false;
-				} else if(curr < 0 && chromosome.bitstring[-curr-1] != 0){
-					satisfyClause = false;
+				if(curr > 0 && chromosome.bitstring[curr-1] == 1){
+					satisfyClause = true;
+					break;
+				} else if(curr < 0 && chromosome.bitstring[-curr-1] == 0){
+					satisfyClause = true;
+					break;
 				}
 			}
 			if(satisfyClause == true){
 				chromosome.fitness++;
 			}
-			satisfyClause = true;
+			satisfyClause = false;
 		}
 		chromosomes[index].fitness = chromosome.fitness;
 	}
@@ -334,6 +336,9 @@ public class GeneticAlgo {
 					} else if(test.bitstring[randomBit] == 1){
 						test.bitstring[randomBit] = 0;
 					}
+					setFitness(test, i, clauseArr);
+				} else{ // keep state
+					
 				}
 			}	
 		}
