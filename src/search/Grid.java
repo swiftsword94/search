@@ -59,7 +59,7 @@ public class Grid
 	public void createGrid(File file) throws FileNotFoundException
 	{
 		Scanner scan = new Scanner(file);
-		int cityID = -1, x = -1, y = -1;
+		int cityID = -1, x = -1, y = -1, maxWidth = 0, maxHeight = 0;
 		 if(scan.hasNext())
 		 {
 			 int size = Integer.parseInt(scan.nextLine());
@@ -75,10 +75,14 @@ public class Grid
 			cityID = Integer.parseInt(str);
 			str = scan.next();
 			x = Integer.parseInt(str);
+			maxWidth = (x > maxWidth) ? x : maxWidth;
 			str = scan.next();
 			y = Integer.parseInt(str);
+			maxHeight = (y > maxHeight) ? y : maxHeight;
 			add(new Node<intIdentifier, Coord>(new intIdentifier(cityID), new Coord(x, y)));
 		}
+		width = maxWidth;
+		height = maxHeight;
 	}
 	public void exportGrid(File file) throws FileNotFoundException
 	{
@@ -100,14 +104,89 @@ public class Grid
 	{
 		
 	}
-	public void nearestInsertion(ArrayList<Node<intIdentifier, Coord>> current)
+	public ArrayList<Node<intIdentifier, Coord>> minimumSpaningTree(Node<intIdentifier, Coord> start)
 	{
-		/*
-		1. Select the shortest edge, and make a subtour of it.
-		2. Select a city not in the subtour, having the shortest distance to any one of the cities in the subtour.
-		3. Find an edge in the subtour such that the cost of inserting the selected city between the edge’s cities will be minimal.
-		*/
-		
+		if(graph == null)
+		{
+			return null;
+		}
+		ArrayList<Node<intIdentifier, Coord>> res = new ArrayList<Node<intIdentifier, Coord>>();
+		PriorityQueue<Node<intIdentifier, Coord>> fringe = new PriorityQueue<>();
+		HashSet<Node<intIdentifier, Coord>> closed = new HashSet<Node<intIdentifier, Coord>>();
+		fringe.add(new Node<intIdentifier, Coord>(start.getIdentifier(), start.getData()));
+		Node<intIdentifier, Coord> ptr = null;
+		boolean inFringe = false, inClosed = false;
+		//for all nodes in the fringe
+		while(!fringe.isEmpty())
+		{
+			ptr = fringe.poll();
+			//for each neighbor of the cheapset node
+			
+			Node<intIdentifier, Coord> insert;
+			for(Node<intIdentifier, Coord> neigh : ptr.getNeighbors())
+			{
+				inFringe = false;
+				inClosed = false;
+				insert = neigh;
+				//if the neighbor is in the fringe
+				for(Node<intIdentifier, Coord> indexed : fringe)
+				{
+					if(neigh.getData().x == indexed.getData().x && neigh.getData().y == indexed.getData().y)//the fringe is limited to only one copy of each node in the graph
+					{
+						inFringe = true;
+						insert = indexed;
+						break;
+					}
+				}
+				//if the neighbor is in closed
+				for(Node<intIdentifier, Coord> indexed : closed)
+				{
+					if(neigh.getData().x == indexed.getData().x && neigh.getData().y == indexed.getData().y)//the fringe is limited to only one copy of each node in the graph
+					{
+						inClosed = true;
+						insert = indexed;
+						break;
+					}
+				}
+				//if it is not in the fringe or closed make a new node to put in the fringe
+				if(!inFringe && !inClosed)
+				{
+					insert = new Node<intIdentifier, Coord>(neigh.getIdentifier(), neigh.getData());
+					for(Node<intIdentifier, Coord> neighbor : neigh.getNeighbors())
+					{
+						//copy down all the neighbors
+						if(insert.getNeighbors().contains(neighbor))
+						{
+							insert.getNeighbors().add(neigh);
+							neigh.getNeighbors().add(insert);
+						}
+					}
+					insert.setDistance(Double.POSITIVE_INFINITY);
+					insert.setParent(null);
+				}
+				Double dist = ptr.getDistance()+euclidDistance(ptr, insert);
+				if(insert.getDistance() > dist)
+				{
+					insert.setParent(ptr);
+					insert.setDistance(dist);
+					if(!inClosed)
+					{
+						insert.seteCost(dist);
+						//if insert is in the fringe then remove and insert to avoid duplicates
+						if(inFringe)
+						{
+							fringe.remove(insert);
+							fringe.add(insert);
+						}
+						else
+						{
+							fringe.add(insert);
+						}
+					}
+				}
+			}
+		}
+		return null;
 	}
 	public ArrayList<Node<intIdentifier, Coord>> shortestHamiltonianCycle() throws Exception
 	{
@@ -116,10 +195,12 @@ public class Grid
 			throw new Exception("Graph uninitialized");
 		}
 		//make a minheap of Cycles in the graph
-		PriorityQueue<Cycle> fringe = new PriorityQueue<>();//how do i want to compare the outcomes
+		PriorityQueue<Node<intIdentifier, Coord>> fringe = new PriorityQueue<>();//how do i want to compare the outcomes
 		HashSet<Node<intIdentifier, Coord>> closed = new HashSet<Node<intIdentifier, Coord>>();
-		Node tmp = null;
+		Node<intIdentifier, Coord> tmp = null;
 		new Cycle();
+		tmp = graph.get(graph.keySet().iterator().next());//current and fringe pointer nodes
+		tmp.setParent(tmp);
 		while(!fringe.isEmpty())
 		{
 			

@@ -37,7 +37,7 @@ public class Node<ID extends DeepCopy<ID>, Data extends DeepCopy<Data>> implemen
 	public Node(Node<ID, Data> node)
 	{
 		this.identifier.copy(node.identifier);
-		this.data = node.data;
+		this.data.copy(node.data);
 		this.parent = node.parent;
 		this.neighbors = new ArrayList<Node<ID, Data>>(node.neighbors);
 	}

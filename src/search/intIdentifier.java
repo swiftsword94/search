@@ -15,12 +15,12 @@ public class intIdentifier implements DeepCopy<intIdentifier>
 	}
 	public void setId(Integer id)
 	{
-		this.id = id.intValue();
+		this.id = id;
 	}
 	@Override
 	public void copy(intIdentifier other)
 	{
-		other.setId(id);//creates a new one in memory?
+		this.setId(other.id);//creates a new one in memory?
 	}
 
 }
