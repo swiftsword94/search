@@ -82,7 +82,19 @@ public class Grid
 	}
 	public void exportGrid(File file) throws FileNotFoundException
 	{
-		//Todo
+		
+	}
+	
+	/**
+	 * Gets the straight line distance from start to end.
+	 * Avoids using Math.pow for efficiency(it uses some sort of edge case checking)
+	 * @param start the starting node
+	 * @param end the ending node
+	 * @return
+	 */
+	public static Double euclidDistance(Node<intIdentifier, Coord> start, Node<intIdentifier, Coord> end)
+	{
+		return Math.sqrt(new Double((start.getData().x-end.getData().x*start.getData().x-end.getData().x))+((start.getData().y-end.getData().y*start.getData().y-end.getData().y)));
 	}
 	public void updateFringe()
 	{
@@ -90,9 +102,11 @@ public class Grid
 	}
 	public void nearestInsertion(ArrayList<Node<intIdentifier, Coord>> current)
 	{
-		/*1. Select the shortest edge, and make a subtour of it.
-2. Select a city not in the subtour, having the shortest distance to any one of the cities in the subtour.
-3. Find an edge in the subtour such that the cost of inserting the selected city between the edge’s cities will be minimal.*/
+		/*
+		1. Select the shortest edge, and make a subtour of it.
+		2. Select a city not in the subtour, having the shortest distance to any one of the cities in the subtour.
+		3. Find an edge in the subtour such that the cost of inserting the selected city between the edge’s cities will be minimal.
+		*/
 		
 	}
 	public ArrayList<Node<intIdentifier, Coord>> shortestHamiltonianCycle() throws Exception
@@ -101,9 +115,11 @@ public class Grid
 		{
 			throw new Exception("Graph uninitialized");
 		}
-		PriorityQueue<ArrayList<Node<intIdentifier, Coord>>> fringe = new PriorityQueue<>();//how do i want to compare the outcomes
+		//make a minheap of Cycles in the graph
+		PriorityQueue<Cycle> fringe = new PriorityQueue<>();//how do i want to compare the outcomes
 		HashSet<Node<intIdentifier, Coord>> closed = new HashSet<Node<intIdentifier, Coord>>();
-		
+		Node tmp = null;
+		new Cycle();
 		while(!fringe.isEmpty())
 		{
 			
