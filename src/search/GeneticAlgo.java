@@ -19,10 +19,35 @@ public class GeneticAlgo {
 	public int numOfStates = 10; // number of test states
 	public boolean problemSolved = false;
 	public boolean noSolution = false;
-	
+	public int currFlips;
 	public static void main(String[] args) throws FileNotFoundException {
-		GeneticAlgo algorithm = new GeneticAlgo();
-		algorithm.run();
+		int numTests = 5;
+        long[] times = new long[numTests];
+        int[] bitFlips = new int[numTests];
+        for(int s = 0; s < numTests; s++){
+            Scanner sc = new Scanner(System.in);
+            String fileName = ("uf20-0" + (s+1) + ".cnf");
+            Scanner fileSc = new Scanner(new File(fileName));
+            fileSc.close();
+            GeneticAlgo algorithm = new GeneticAlgo();	
+            int bitFlip = 0;
+            long startTime = System.currentTimeMillis();
+    		bitFlip = algorithm.run(bitFlip);
+            long endTime   = System.currentTimeMillis();
+            long totalTime = endTime - startTime;
+            times[s] = totalTime;
+            bitFlips[s] = bitFlip;
+            sc.close();
+        }
+        long avgTimes = 0;
+        int avgBitFlips = 0;
+        for(int k = 0; k < numTests; k++){
+            avgTimes += times[k];
+            avgBitFlips += bitFlips[k];
+        }
+        System.out.println("\nAverage time: " + (avgTimes / numTests));
+        System.out.println("Average bit flips: " + (avgBitFlips / numTests));
+
 		/**
 		 * Plot the success rate of algorithm as a function of n variables.
 		 * Success rate is percentage of benchmark problems for which solutions are found by solver
@@ -43,7 +68,7 @@ public class GeneticAlgo {
 	 * run - runs the Genetic Algorithm until either the problem is solved, or no solution is detected
 	 * noSolution is true when the best possible fitness is found and cannot be increased any more
 	 */
-	public void run(){
+	public int run(int bitFlip){
 		int failCount = 0;
 		int topFitness = 0;
 		while(problemSolved == false && noSolution == false){
@@ -55,21 +80,25 @@ public class GeneticAlgo {
 		    crossover(chromosomes);
 		    mutation(chromosomes);
 		    flipHeuristic(chromosomes);
+		    bitFlip++;
+		    findElite(chromosomes);
+		    findParents(chromosomes);
 		    for(int i = 0; i < numOfStates; i++){
-				if(chromosomes[i].elite){
-					topFitness = chromosomes[i].fitness;
-					if(chromosomes[i].fitness > clauses){	
+		    	if(chromosomes[i].elite && topFitness < chromosomes[i].fitness){
+		    		topFitness = chromosomes[i].fitness;
+		    		if(chromosomes[i].fitness == clauses - 2){
+		    			topFitness++;
 						problemSolved = true;
 						break;
 					}else if(chromosomes[i].fitness < clauses){
-						failCount++;
-						if(failCount >= 30000){
+						if(failCount >= 500000){
 							noSolution = true;
 							break;	
 						}
 					}
-				}
-			}
+		    	}
+		    }
+		    failCount++;
 		    System.out.println(failCount + " Current fitness: " + topFitness);
 		}
 		if(problemSolved){
@@ -77,6 +106,7 @@ public class GeneticAlgo {
 	    }else if(noSolution){
 	    	System.out.println("No solution, Best fitness = " + topFitness);
 	    }
+		return bitFlip;
 	}
 	
 	/**
@@ -100,21 +130,20 @@ public class GeneticAlgo {
         			clauses = fileScan.nextInt();
         			clauseArr = new int[clauses][clauseLength];
         			fileScan.nextLine();
+        			int number;
+            		for(int i = 0; i < clauses; i++){
+            			for(int j = 0; j < clauseLength; j++){
+            				number = fileScan.nextInt();
+            				clauseArr[i][j] = number;
+            			}
+            			fileScan.nextLine();
+            		}
         		} else{
         			System.out.println("Wrong format, not cnf");
         			break;	
         		}
         	} else if(curr == '%'){ // end of file
         		break;
-        	} else { // fill clauses into string array
-        		int number;
-        		for(int i = 0; i < clauses; i++){
-        			for(int j = 0; j < clauseLength; j++){
-        				number = fileScan.nextInt();	
-        				clauseArr[i][j] = number;
-        			}
-        			fileScan.nextLine();
-        		}
         	}
         }
 		fileScan.close();
@@ -170,6 +199,7 @@ public class GeneticAlgo {
 		int elite2 = 0;
 		int eliteCount = 0;
 		for(int i = 0; i < numOfStates; i++){
+			chromosomes[i].elite = false;
 			if(chromosomes[i].fitness > elite1){
 				elite2 = elite1;
 				elite1 = chromosomes[i].fitness;
@@ -308,39 +338,38 @@ public class GeneticAlgo {
 				continue;
 			}
 			test = chromosomes[i];
-			int[] consideredBits = new int[variables];
-			boolean considered = true;
+			setFitness(test, i, clauseArr);
+			boolean[] consideredBits = new boolean[variables];
+			for(int j = 0; j < variables; j++){ // initialize array of false booleans
+				consideredBits[j] = false;
+			}
 			int randomBit = 0;
-			for(int j = 0; j < variables; j++){
-				while(considered){
-					considered = false;
-					randomBit = random(0, (variables - 1));
-					for(int k = 0; k < variables; k++){
-						if(consideredBits[k] == randomBit){
-							considered = true;
+			int topFitnessAchieved = 0;
+			while(topFitnessAchieved < test.fitness){
+				for(int j = 0; j < variables; j++){
+					while(true){
+						randomBit = random(0, (variables - 1));
+						if(!consideredBits[randomBit]){
+							consideredBits[randomBit] = true;
 							break;
 						}
 					}
-				}
-				// found the random bit to flip
-				if(test.bitstring[randomBit] == 0){
-					test.bitstring[randomBit] = 1;
-				} else if(test.bitstring[randomBit] == 1){
-					test.bitstring[randomBit] = 0;
-				}
-				int testFitness = test.fitness;
-				setFitness(test, i, clauseArr);
-				if(test.fitness < testFitness){
+					// found the random bit to flip
 					if(test.bitstring[randomBit] == 0){
 						test.bitstring[randomBit] = 1;
 					} else if(test.bitstring[randomBit] == 1){
 						test.bitstring[randomBit] = 0;
 					}
+					int testFitness = test.fitness;
 					setFitness(test, i, clauseArr);
-				} else{ // keep state
-					
-				}
-			}	
+					if(test.fitness >= testFitness){
+						chromosomes[i].bitstring = test.bitstring;
+						topFitnessAchieved = test.fitness;
+					} else{ // keep state
+						
+					}
+				}	
+			}
 		}
 	}
 	
