@@ -9,7 +9,7 @@ import java.util.Scanner;
  * SATISFIABILITY PROBLEM - Genetic Algorithm
  */
 
-// TODO: Complete crossover, mutation, and flipHeuristic. Complete main.
+// TODO: Finish testing of files
 public class GeneticAlgo {
 	public int variables; // n
 	public int clauses; // m
@@ -26,14 +26,14 @@ public class GeneticAlgo {
         int[] bitFlips = new int[numTests];
         for(int s = 0; s < numTests; s++){
             Scanner sc = new Scanner(System.in);
-            String fileName = ("uf20-0" + (s+1) + ".cnf");
+            String fileName = ("uf50-010" + (s+1) + ".cnf");
             Scanner fileSc = new Scanner(new File(fileName));
-            fileSc.close();
             GeneticAlgo algorithm = new GeneticAlgo();	
             int bitFlip = 0;
             long startTime = System.currentTimeMillis();
-    		bitFlip = algorithm.run(bitFlip);
+    		bitFlip = algorithm.run(bitFlip, fileSc);
             long endTime   = System.currentTimeMillis();
+            fileSc.close();
             long totalTime = endTime - startTime;
             times[s] = totalTime;
             bitFlips[s] = bitFlip;
@@ -60,15 +60,17 @@ public class GeneticAlgo {
 	 * @throws FileNotFoundException 
 	 */
 	public GeneticAlgo() throws FileNotFoundException{	
-        fileParse(); 
-        genStates();  
+          
 	}
 	
 	/**
 	 * run - runs the Genetic Algorithm until either the problem is solved, or no solution is detected
 	 * noSolution is true when the best possible fitness is found and cannot be increased any more
+	 * @throws FileNotFoundException 
 	 */
-	public int run(int bitFlip){
+	public int run(int bitFlip, Scanner fileScan) throws FileNotFoundException{
+		fileParse(fileScan); 
+        genStates();
 		int failCount = 0;
 		int topFitness = 0;
 		while(problemSolved == false && noSolution == false){
@@ -90,16 +92,14 @@ public class GeneticAlgo {
 		    			topFitness++;
 						problemSolved = true;
 						break;
-					}else if(chromosomes[i].fitness < clauses){
-						if(failCount >= 500000){
-							noSolution = true;
-							break;	
-						}
 					}
 		    	}
 		    }
 		    failCount++;
 		    System.out.println(failCount + " Current fitness: " + topFitness);
+		    if(failCount >= 50000){
+				noSolution = true;
+		    }
 		}
 		if(problemSolved){
 	    	System.out.println("Solved problem, Best Fitness = " + topFitness);
@@ -113,12 +113,12 @@ public class GeneticAlgo {
 	 * fileParse - parses through input file, reads in variables, clauses, then parses through the clauses
 	 * @throws FileNotFoundException 
 	 */
-	public void fileParse() throws FileNotFoundException{
-		Scanner sc = new Scanner(System.in);
+	public void fileParse(Scanner fileScan) throws FileNotFoundException{
+		/*Scanner sc = new Scanner(System.in);
         System.out.println("Enter file name: ");   
         String fileName = sc.next();
         sc.close();
-        Scanner fileScan = new Scanner(new File(fileName));
+        Scanner fileScan = new Scanner(new File(fileName));*/
 		while(fileScan.hasNext()){
 			char curr = fileScan.next().charAt(0);
         	if(curr == 'c'){ // comment line
