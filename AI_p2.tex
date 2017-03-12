@@ -31,7 +31,56 @@ Number of Variables & Median Running Time (s) & Average bit flips \\
 The number of variables in each instance has a strong effect on the median running time and average bit flips performed. For the 20 variable problems, the comupter would solve 50 of them in just a couple on minutes. As we tested the 50 and 75 variable problems, the average time per problem increased significantly, as did the amount of bit flips. The time and bit flips were almost 7 times higher for the 50 variable problems, and 16 times higher for the 75 variable problems. Finally, the 100 variable problems took so much time to run, that we had to test them separately instead of all together like the others. They were almost 20 times higher in median running time and bit flips. \\\medskip
 The performance becomes much slower with more variables in the problem because the computer has to store and evaluate many more values. The bit flip amount increased significantly because each one of the variables would contribute to extra bit flips every cycle. Finally, the amount of clauses increased as the amount of variables increased, so evaluating all of them became much more time consuming.\\\medskip
 
-Problem 2: 
+Problem 2: \\
+$a$. Intermediate Node Values:\\
+A = Start Node \\
+B = 6, C = 17 \\
+D = 8, E = 6, F = 22, G = 17 \\
+H = 8, I = 5, J = 6, K = 6, L = 18, M = 22, N = 8, O = 17 \\\medskip
+
+$b$. Alpha-Beta Pruning - Nodes Not Considered:\\
+Node I's right child, 16\\
+Node N's right child, 8\\
+Node G's right children, O, 90, and 17\\\medskip
+Alpha Beta Values:\\
+A: $\alpha = 6, \beta = 8$\\
+B: $\alpha = 6, \beta = 8$ \\
+C: $\alpha = 18, \beta = 22$ \\
+D: $\alpha = 8, \beta = +\infty$ \\
+E: $\alpha = 6, \beta = 8$ \\
+F: $\alpha = 18, \beta = +\infty$ \\
+G: $\alpha = 18, \beta = 8$ \\
+H: $\alpha = -\infty, \beta = 8$ \\
+I: $\alpha = 8, \beta = 5$ - pruned right subtree\\
+J: $\alpha = 6, \beta = 8$ \\
+K: $\alpha = 6, \beta = 8$ \\
+L: $\alpha = -\infty, \beta = 18$ \\
+M: $\alpha = 18, \beta = 22$ \\
+N: $\alpha = 18, \beta = 8$ - pruned right subtree\\
+O: pruned \\\medskip
+
+$c$. The MAX player will choose to go right at the root state, to the C node. The MAX player will also go right at the root node using the alpha-beta pruning algorithm. The best move computed by the two versions is guaranteed to be the same, because alpha-beta pruning only removes nodes that wouldn't be visited anyway.\\\medskip
+
+$d$. The heuristic-aided minimax algorithm reorders the nodes by left aligning the min values for the MIN player, and the max values for the MAX player to place the most likely path of the algorithm to the left and the least likely to the right.\\
+New Tree: \\
+A = root\\
+B = 17, C = 6\\
+D = 17, E = 22, F = 6, G = 8\\
+H = 17, I = 8, J = 22, K = 18, L = 6, M = 6, N = 8, O = 5\\
+17, 90, 8, 99, 22, 28, 18, 18, 6, 15, 6, 83, 8, 99, 5, 16 \\\medskip
+
+The nodes not examined by the alpha-beta pruning will increase from 5 to 13, with nodes K, G, N, and their children getting pruned. The right children of nodes I, L and M are also pruned.\\\medskip
+
+$e$. If the opponent plays randomly, the min nodes are picked arbitrarily at every MIN level, causing changes to happen upward through the tree all the way to the root. \\\medskip
+
+Min Replaced With Random:\\
+A = root node\\
+B = 99, C = 22\\
+D = 99, E = 83 \\
+F = 22, G = 99 \\
+H = 99, I = 5, J = 83, K = 6, L = 18, H = 22, N = 99, O = 17 \\\medskip
+In this case, the MAX player will choose to go left instead of right, because due to the random selections made by the opponent, the left tree has much better options now instead of the right. You cannot apply alpha-beta pruning in this case because the opponent moves randomly, so the moves cannot be predicted fully. If we don't know the exact values of alpha and beta, we cannot perform the algorithm.\\\medskip
+
 
 \end{flushleft}
 \end{document}  
