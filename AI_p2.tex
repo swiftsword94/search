@@ -33,6 +33,59 @@ The number of variables in each instance has a strong effect on the median runni
 The performance becomes much slower with more variables in the problem because the computer has to store and evaluate many more values. The bit flip amount increased significantly because each one of the variables would contribute to extra bit flips every cycle. Finally, the amount of clauses increased as the amount of variables increased, so evaluating all of them became much more time consuming.\\\medskip
 
 \section*{Problem 2:}
+
+
+Problem 2: \\
+$a$. Intermediate Node Values:\\
+A = Start Node \\
+B = 6, C = 17 \\
+D = 8, E = 6, F = 22, G = 17 \\
+H = 8, I = 5, J = 6, K = 6, L = 18, M = 22, N = 8, O = 17 \\\medskip
+
+$b$. Alpha-Beta Pruning - Nodes Not Considered:\\
+Node I's right child, 16\\
+Node N's right child, 8\\
+Node G's right children, O, 90, and 17\\\medskip
+Alpha Beta Values:\\
+A: $\alpha = 6, \beta = 8$\\
+B: $\alpha = 6, \beta = 8$ \\
+C: $\alpha = 18, \beta = 22$ \\
+D: $\alpha = 8, \beta = +\infty$ \\
+E: $\alpha = 6, \beta = 8$ \\
+F: $\alpha = 18, \beta = +\infty$ \\
+G: $\alpha = 18, \beta = 8$ \\
+H: $\alpha = -\infty, \beta = 8$ \\
+I: $\alpha = 8, \beta = 5$ - pruned right subtree\\
+J: $\alpha = 6, \beta = 8$ \\
+K: $\alpha = 6, \beta = 8$ \\
+L: $\alpha = -\infty, \beta = 18$ \\
+M: $\alpha = 18, \beta = 22$ \\
+N: $\alpha = 18, \beta = 8$ - pruned right subtree\\
+O: pruned \\\medskip
+
+$c$. The MAX player will choose to go right at the root state, to the C node. The MAX player will also go right at the root node using the alpha-beta pruning algorithm. The best move computed by the two versions is guaranteed to be the same, because alpha-beta pruning only removes nodes that wouldn't be visited anyway.\\\medskip
+
+$d$. The heuristic-aided minimax algorithm reorders the nodes by left aligning the min values for the MIN player, and the max values for the MAX player to place the most likely path of the algorithm to the left and the least likely to the right.\\
+New Tree: \\
+A = root\\
+B = 17, C = 6\\
+D = 17, E = 22, F = 6, G = 8\\
+H = 17, I = 8, J = 22, K = 18, L = 6, M = 6, N = 8, O = 5\\
+17, 90, 8, 99, 22, 28, 18, 18, 6, 15, 6, 83, 8, 99, 5, 16 \\\medskip
+
+The nodes not examined by the alpha-beta pruning will increase from 5 to 13, with nodes K, G, N, and their children getting pruned. The right children of nodes I, L and M are also pruned.\\\medskip
+
+$e$. If the opponent plays randomly, the min nodes are picked arbitrarily at every MIN level, causing changes to happen upward through the tree all the way to the root. \\\medskip
+
+Min Replaced With Random:\\
+A = root node\\
+B = 99, C = 22\\
+D = 99, E = 83 \\
+F = 22, G = 99 \\
+H = 99, I = 5, J = 83, K = 6, L = 18, H = 22, N = 99, O = 17 \\\medskip
+In this case, the MAX player will choose to go left instead of right, because due to the random selections made by the opponent, the left tree has much better options now instead of the right. You cannot apply alpha-beta pruning in this case because the opponent moves randomly, so the moves cannot be predicted fully. If we don't know the exact values of alpha and beta, we cannot perform the algorithm.\\\medskip
+
+
 \section*{Problem 3:}
 \subsection*{a}
 For solving a Sudoku like this, the simplest way would be to have 9 arrays as each row to hold the numbers where each cell holds a number from 1-9. The constraints are that a single row must not have a duplicate number, cells in the same index in all rows must not have a duplicate number, cells that integer divide by 3 to the same number must not have the same number and certain numbers are fixed in certain cells.
@@ -42,10 +95,9 @@ The start state is the current instance of the values in the board. The successo
 An easy Sudoku problem has fewer blocks with a high branching factor after checking the constraints while a harder problem has more blocks with a higher branching factor. Having a high branching factor after checking constraints means that you have a higher chance to pick a wrong choice which may not be realized until much farther in computation. Once there, you would have to backtrack all the way to that first wrong choice to find out what is the correct answer and restart the computation from there.
 \subsection*{d}
 It may be the case that a genetic algorithm would be better than a backtracking search. The algorithm would essentially take these steps:
-\pagebreak
+
 \begin{program}
 \BEGIN \\
-
 \PROC |Selection|(|State Array|)\BODY \
 
 \FOR i:=0 \TO |State Array|.length \DO
