@@ -81,6 +81,35 @@ F = 22, G = 99 \\
 H = 99, I = 5, J = 83, K = 6, L = 18, H = 22, N = 99, O = 17 \\\medskip
 In this case, the MAX player will choose to go left instead of right, because due to the random selections made by the opponent, the left tree has much better options now instead of the right. You cannot apply alpha-beta pruning in this case because the opponent moves randomly, so the moves cannot be predicted fully. If we don't know the exact values of alpha and beta, we cannot perform the algorithm.\\\medskip
 
+Problem 4: \\
+$a$.\\
+A: Superman will be defeated \\
+B: Superman facing an opponent alone \\
+C: Has Kryptonite \\
+D: Batman coordinates with Lex Luthor \\
+E: Wonder Woman upset \\
+F: Wonder Woman joins Superman \\\medskip
+
+$(B \wedge C) \Rightarrow A$ \\
+$C \Rightarrow D$ \\
+$D \Rightarrow (E \wedge F)$ \\
+$(E \wedge F) \Rightarrow \neg B$ \\
+$\neg B \Rightarrow \neg A$ \\\medskip
+
+$b$. \\
+$(\neg D \vee C \vee \neg E ) \wedge (\neg E \vee F \vee B ) \wedge (F \vee B \vee \neg A)$ \\\medskip
+
+$c$. \\
+1. $A$ Batman can defeat Superman. \\
+2. $A \wedge B$ Batman must fight Superman while he is alone to defeat him. \\
+3. $A \wedge C$ Batman must possess Kryptonite to defeat him. \\
+4. $C \wedge D$ Batman must coordinate with Lex Luthor to acquire Kryptonite. \\
+5. $D \wedge E$ This angers Wonder Woman. \\
+6. $E \wedge F$ Wonder Woman joins forces with Superman. \\
+7. $F \wedge \neg B$ Wonder Woman joining Superman means he will not be alone. \\
+8. $B \neq \neg B$ This is a contradiction of 2. \\
+9. $\neg A$ Therefore, Batman cannot defeat Superman, due to 8.\\\medskip
+
 
 \end{flushleft}
 \end{document}  
