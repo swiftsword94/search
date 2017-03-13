@@ -179,7 +179,16 @@ $(\neg D \vee C \vee \neg E ) \wedge (\neg E \vee F \vee B ) \wedge (F \vee B \v
 
 \section*{Problem 6:}
 \subsection*{a}
-If we use the $minimum$ value of $h_{1}(n)$
+If we use the $minimum$ value of $h_{1}(n)$ and $h_{2}(n)$ at every state, the resulting heuristic will be admissible because it will always use the $minimum$ value and never overestimate the path to the goal. However, the heuristic will not be consistent because it won't help find the optimal path at all, and might as well not be there at all. \\\medskip
+
+\subsection*{b}
+If we use the $maximum$ value of $h_{1}(n)$ and $h_{2}(n)$ at every state then the resulting heuristic will not be admissible because it will always overestimate the path to the goal. It will also be inconsistent because it'll actually make the search process much more difficult, and won't help find the optimal path. \\\medskip
+
+\subsection*{c}
+If we define the heuristic function $h_{3}(n) = w \cdot h_{1}(n)+(1-w) \cdot h_{2}(n)$, where $0 \leq w \leq 1$, the heuristic will be admissible because the weights of the heuristics will balance each other out, and the optimal path will never be overestimated. It will also be consistent as long as the heuristics used are both consistent and admissible.
+
+\subsection*{d}
+The informed best-first search is optimal when h is admissible and $0 \leq w \leq 1$. If the weight is 0, the search will degrade into Djikstra's. If the weight is 1 or lower, it will be optimal as well. Any weight higher than 1 will make the search too greedy and suboptimal, so $w=2$ will cause the algorithm to ignore the g value and greedily follow the heuristic.\\\medskip
 
 \end{flushleft}
 \end{document}  
