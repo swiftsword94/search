@@ -4,6 +4,7 @@
 \usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
 								% TeX will automatically convert eps --> pdf in pdflatex		
 \usepackage{amssymb}
+\usepackage{program}
 
 \title{Assignment 2: Classical and Local Search, Adversarial Search, Constraint Satisfaction Problems, and Logic}
 \author{Alex Smirnov, Scott Reyes}
@@ -15,14 +16,14 @@
 %\subsection{}
 \begin{flushleft}
 
-Problem 1:
+\section*{Problem 1:}
 \begin{center}
 \begin{tabular}{ |c|c|c|} 
 \hline
-Number of Variables & Median Running Time (s) & Average bit flips \\ 
-20 & 41.994 & 109566 \\
-50 & 299.201 & 761892 \\
-75 & 681.720 & 1621230 \\
+Number of Variables & Median Running Time (s) & Average bit flips \\\hline
+20 & 41.994 & 109566 \\\hline
+50 & 299.201 & 761892 \\\hline
+75 & 681.720 & 1621230 \\\hline
 100 & 981.720 & 3117231 \\
 \hline
 \end{tabular}
@@ -30,6 +31,9 @@ Number of Variables & Median Running Time (s) & Average bit flips \\
 
 The number of variables in each instance has a strong effect on the median running time and average bit flips performed. For the 20 variable problems, the comupter would solve 50 of them in just a couple on minutes. As we tested the 50 and 75 variable problems, the average time per problem increased significantly, as did the amount of bit flips. The time and bit flips were almost 7 times higher for the 50 variable problems, and 16 times higher for the 75 variable problems. Finally, the 100 variable problems took so much time to run, that we had to test them separately instead of all together like the others. They were almost 20 times higher in median running time and bit flips. \\\medskip
 The performance becomes much slower with more variables in the problem because the computer has to store and evaluate many more values. The bit flip amount increased significantly because each one of the variables would contribute to extra bit flips every cycle. Finally, the amount of clauses increased as the amount of variables increased, so evaluating all of them became much more time consuming.\\\medskip
+
+\section*{Problem 2:}
+
 
 Problem 2: \\
 $a$. Intermediate Node Values:\\
@@ -111,5 +115,62 @@ $c$. \\
 9. $\neg A$ Therefore, Batman cannot defeat Superman, due to 8.\\\medskip
 
 
+\section*{Problem 3:}
+\subsection*{a}
+For solving a Sudoku like this, the simplest way would be to have 9 arrays as each row to hold the numbers where each cell holds a number from 1-9. The constraints are that a single row must not have a duplicate number, cells in the same index in all rows must not have a duplicate number, cells that integer divide by 3 to the same number must not have the same number and certain numbers are fixed in certain cells.
+\subsection*{b}
+The start state is the current instance of the values in the board. The successor function is a function that goes through the board, finds the space with the lowest number of conflicts on placement of a value, and assigns the cell the corresponding number. To test the goal, each cell can be checked to see if it has a conflict. The path cost would be the number of conflicts a cell has given the placement of a character.
+\subsection*{c}
+An easy Sudoku problem has fewer blocks with a high branching factor after checking the constraints while a harder problem has more blocks with a higher branching factor. Having a high branching factor after checking constraints means that you have a higher chance to pick a wrong choice which may not be realized until much farther in computation. Once there, you would have to backtrack all the way to that first wrong choice to find out what is the correct answer and restart the computation from there.
+\subsection*{d}
+It may be the case that a genetic algorithm would be better than a backtracking search. The algorithm would essentially take these steps:
+
+\begin{program}
+\BEGIN \\
+\PROC |Selection|(|State Array|)\BODY \
+
+\FOR i:=0 \TO |State Array|.length \DO
+numCorrect:=0
+\FOR j:=0 \TO StateArray_{i}.length \DO
+numCorrect:= |findNumCorrectForCell|()
+\OD
+|ResultArray|.insertByNumCorrect(StateArray_{i},numCorrect);
+\OD
+trim(ResultArray, NumberOfSamples)
+return\ |ResultArray|;
+\
+\ENDPROC
+
+\PROC |Crossover|()\BODY \
+
+\FOR i := 0;\TO |State Array|.length\DO
+\FOR j := 0;\TO StateArray_{i}.length\DO
+\IF Random > .50\THEN swap(StateArray_{ij}.number,StateArray_{(i+1)j}.number )
+\OD
+i+=2;
+\OD
+\
+\ENDPROC
+
+\PROC |Mutation|()\BODY \
+
+\FOR i = StartingIndexOfNotElites;\TO |State Array|.length\DO
+\FOR j = 0\TO StateArray_{i}.length\DO
+\IF(Random > .5)\THEN StateArray_{ij} = RandomNumber;
+\OD
+\OD
+\ENDPROC
+\PROC |SudokuGene|()\BODY \
+
+|State Array|
+  \FOR i:=1 \TO MaxIterations \DO
+     elites = |topElites|(|State Array|); \\
+     \IF |areSatisfied(elites)| \THEN |return|\ elites_{1}\ \FI
+     |Selection|(|State Array|)
+     |Crossover|(|State Array|)
+     |Mutation|(|State Array|)
+     \OD
+\ENDPROC
+\end{program}
 \end{flushleft}
 \end{document}  
