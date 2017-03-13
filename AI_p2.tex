@@ -177,6 +177,11 @@ $(\neg D \vee C \vee \neg E ) \wedge (\neg E \vee F \vee B ) \wedge (F \vee B \v
 8. $B \neq \neg B$ This is a contradiction of 2. \\
 9. $\neg A$ Therefore, Batman cannot defeat Superman, due to 8.\\\medskip
 
+\section*{Problem 5:}
+\subsection*{c}
+Comparing A* and Simulated annealing led to A* taking a long time in comparison to A* Simulated annealing. Because of the way simulated annealing settles into a maximum over time, it is best used on graphs where there are not many similar local maximums around the level of the global maximum, or the window to get into the global maximum's state is dependent on a small number of changes. If a graph like this is presented, While simulated annealing can give an answer that is relatively good to its possible choices, it will struggle to find the global maximum however, with enough random restarts and keeping track of the best answer presented, it may be possible to get the right answer, or at least a better local maximum.
+Simulated annealing assumes that there will often be a better state than the previous state before it, but compensates for that by giving the algorithm the option to make bad choices given a certain decreasing chance for it to occur. Simulated annealing also assumes that there will not be graphs whose choices have equal utility. Having choices with equal utility in a row means that there is no way to escape from these choices if all the other choices are worse than the current set of choices the algorithm is bouncing around between.
+
 \section*{Problem 6:}
 \subsection*{a}
 If we use the $minimum$ value of $h_{1}(n)$ and $h_{2}(n)$ at every state, the resulting heuristic will be admissible because it will always use the $minimum$ value and never overestimate the path to the goal. However, the heuristic will not be consistent because it won't help find the optimal path at all, and might as well not be there at all. \\\medskip
